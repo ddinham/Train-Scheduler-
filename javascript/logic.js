@@ -1,3 +1,4 @@
+$(document).ready(function() {
 /* global firebase moment */
 // Steps to complete:
 
@@ -22,13 +23,20 @@ var config = {
   
   // 2. Button for adding Train
   $("#add-train-btn").on("click", function(event) {
+    // don't refresh page
     event.preventDefault();
   
     // Grabs user input
   var trainName = $("#train-name-input").val().trim();
   var trainDestination = $("#destination-input").val().trim();
-  var trainFirst = moment($("#first-input").val().trim(), "HH:mm").format("X");
-  var trainFrequency = moment($("#frequency-input").val().trim(),"m");
+  var trainFirst = $("#first-input").val().trim();
+  var trainFrequency = $("#frequency-input").val().trim();
+
+  // Clears all of the text-boxes
+  $("#train-name-input").val("");
+  $("#destination-input").val("");
+  $("#first-input").val("");
+  $("#frequency-input").val("");
 
   // Creates local "temporary" object for holding train data
   var newTrain = {
@@ -39,7 +47,7 @@ var config = {
   };
 
   // Uploads train data to the database
-  database.ref("/trains").push(newTrain);
+  database.ref().push(newTrain);
 
   // Logs everything to console
   console.log(newTrain.name);
@@ -49,16 +57,12 @@ var config = {
 
   // Alert
   alert("Train successfully added");
-
-  // Clears all of the text-boxes
-  $("#train-name-input").val("");
-  $("#destination-input").val("");
-  $("#first-input").val("");
-  $("#frequency-input").val("");
+  
 });
 
+
 // 3. Create Firebase event for adding train to the database and a row in the html when a user adds an entry
-database.ref().on("child_added", function(childSnapshot, prevChildKey) {
+database.ref().on("child_added", function(childSnapshot) {
 
   console.log(childSnapshot.val());
 
@@ -67,12 +71,15 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
   var trainDestination = childSnapshot.val().destination;
   var trainFirst = childSnapshot.val().first;
   var trainFrequency = childSnapshot.val().frequency;
+  var key = childSnapshot.key;
+  var remove = "<button class = 'glyphicon glyphicon-trash' id =" + key + "></button>";
 
-  // Train Info
-  console.log(trainName);
-  console.log(trainDestination);
-  console.log(trainFirst);
-  console.log(trainFrequency);
+  //  Train Info
+   console.log(trainName);
+   console.log(trainDestination);
+   console.log(trainFirst);
+   console.log(trainFrequency); 
+
 
   
  // Assumptions
@@ -94,7 +101,7 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
  console.log("DIFFERENCE IN TIME: " + diffTime);
 
  // Time apart (remainder)
- var tRemainder = diffTime % tFrequency;
+ var tRemainder = diffTime % trainFrequency;
  console.log(tRemainder);
 
  // Minute Until Train
@@ -103,7 +110,10 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
 
  // Next Train
  var nextTrain = moment().add(tMinutesTillTrain, "minutes");
- console.log("NEXT ARRIVAL: " + moment(nextTrain).format("hh:mm")); 
+ var nextTrainArr = moment(nextTrain).format("hh:mm");
+ console.log("NEXT ARRIVAL: " + nextTrainArr); 
+
+
   
   
   
@@ -122,8 +132,21 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
 //   console.log(empBilled);
 
   // Add each train's data into the table
-  $("#train-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" +
-  trainFrequency + "</td><td>" + tMinutesTillTrain + "</td><td>" + nextTrain + "</td></tr>");
+  $("#schedule").prepend("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" +
+  trainFrequency + "</td><td>" + nextTrainArr + "</td><td>" + tMinutesTillTrain + "</td><td>" + remove + "</td></tr>");
+}, function(err) {
+  console.log(err);
+});  
+
+$(document).on("click", ".glyphicon-trash",delTrain);
+
+function delTrain() {
+    var delKey = $(this).attr("id");
+    database.ref().child(delKey).remove();
+
+    location.reload();
+
+}  
 });
 
 // Example Time Math
@@ -133,4 +156,5 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
 
 // We know that this is 15 months.
 // Now we will create code in moment.js to confirm that any attempt we use meets this test case
+
 
