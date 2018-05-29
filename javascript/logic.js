@@ -80,14 +80,6 @@ database.ref().on("child_added", function(childSnapshot) {
    console.log(trainFirst);
    console.log(trainFrequency); 
 
-
-  
- // Assumptions
-//  var tFrequency = 3;
-
- // Time is 3:30 AM
-//  var firstTime = "03:30";
-
  // First Time (pushed back 1 year to make sure it comes before current time)
  var trainFirstConverted = moment(trainFirst, "HH:mm").subtract(1, "years");
  console.log(trainFirstConverted);
@@ -112,24 +104,6 @@ database.ref().on("child_added", function(childSnapshot) {
  var nextTrain = moment().add(tMinutesTillTrain, "minutes");
  var nextTrainArr = moment(nextTrain).format("hh:mm");
  console.log("NEXT ARRIVAL: " + nextTrainArr); 
-
-
-  
-  
-  
-  
-  
-  // Prettify the train first departure from station
-//   var empStartPretty = moment.unix(empStart).format("MM/DD/YY");
-
-  // Calculate the months worked using hardcore math
-  // To calculate the months worked
-//   var empMonths = moment().diff(moment(empStart, "X"), "months");
-//   console.log(empMonths);
-
-  // Calculate the total billed rate
-//   var empBilled = empMonths * empRate;
-//   console.log(empBilled);
 
   // Add each train's data into the table
   $("#schedule").prepend("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" +

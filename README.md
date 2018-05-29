@@ -1,3 +1,7 @@
 # Train-Scheduler-
+
+A train scheduler appllication that uses data stored by Firebase to calculate the most up to date arrival information for trains entering the station.  Calculations are made using the Moment.js library.
+
 Contributors: D. Dinham
-Programs: Jquery, Javascript, Firebase
+
+Built with: JQuery, JavaScript, Firebase, Moment.js, HTHML, CSS, Bootstrap
