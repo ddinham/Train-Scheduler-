@@ -4,4 +4,6 @@ A train scheduler appllication that uses data stored by Firebase to calculate th
 
 Contributors: D. Dinham
 
-Built with: JQuery, JavaScript, Firebase, Moment.js, HTHML, CSS, Bootstrap
+Built with: JQuery, JavaScript, Firebase, Moment.js, HTHML, CSS, Bootstrap.
+
+It is deployed at https://ddinham.github.io/Train-Scheduler-/
